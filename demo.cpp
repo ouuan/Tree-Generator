@@ -1,15 +1,3 @@
-## Tree-Generator
-Help problem setters to generate a variety of trees.
-
-You can generate different trees with few functions or even a string, and customize the output function or the random function.
-
-### How to use?
-
-Please read the [GUIDEBOOK](/GUIDEBOOK.md).
-
-### Demo
-
-```cpp
 #include "treegenerator.h"
 
 using namespace std;
@@ -34,4 +22,3 @@ int main()
 
     return 0;
 }
-```
