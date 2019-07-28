@@ -98,7 +98,8 @@ namespace tree_generator_by_ouuan
                     pos = nxt;
                     addNode(x);
                 }
-                else if (type == "rd" || type == "ch" || type == "st" || type == "fl" || type == "bi" || type == "cb")
+                else if (type == "rd" || type == "ch" || type == "st" || type == "fl"
+					  || type == "bi" || type == "cb" || type == "sw")
                 {
                     int nxt = findComma(s, pos);
                     int x = atoi(s.substr(pos, nxt - pos).c_str());
@@ -112,6 +113,7 @@ namespace tree_generator_by_ouuan
                     else if (type == "fl") flower(x, y);
                     else if (type == "bi") binary(x, y);
                     else if (type == "cb") completeBinary(x, y);
+                    else if (type == "sw") silkworm(x, y);
                     else assert(false);
                 }
                 else if (type == "tl" || type == "md" || type == "cp" || type == "al")
@@ -216,6 +218,16 @@ namespace tree_generator_by_ouuan
         {
             complete(n, 3, fa);
         }
+        void silkworm(int n, int fa)
+        {
+        	int sz = size();
+            assert(n > 0);
+            assert(fa >= 0);
+            assert(fa < sz);
+            int chain_len = (n + 1) / 2;
+            chain(chain_len, fa);
+            for (int i = sz; i + chain_len < sz + n; ++i) addNode(i);
+		}
         void addLeaves(int n, int l, int r)
         {
             assert(n > 0);
@@ -224,12 +236,13 @@ namespace tree_generator_by_ouuan
             assert(l <= r);
             for (int i = 1; i <= n; ++i) addNode(randint(l, r));
         }
-        void shuffleNodes()
+        void shuffleNodes(int from = 0)
         {
-            for (unsigned int i = 0; i < id.size(); ++i)
+        	for (int i = 0; i < from; ++i) id[i] = i;
+            for (unsigned int i = from; i < id.size(); ++i)
             {
                 id[i] = i;
-                swap(id[i], id[randint(0, i)]);
+                swap(id[i], id[randint(from, i)]);
             }
         }
         void shuffleEdges()
