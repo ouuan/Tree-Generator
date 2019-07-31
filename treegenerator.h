@@ -24,6 +24,9 @@ SOFTWARE.
 
 */
 
+#ifndef TREE_GENERATOR_BY_OUUAN_
+#define TREE_GENERATOR_BY_OUUAN_ 1
+
 #include <bits/stdc++.h>
 #include <ext/pb_ds/tree_policy.hpp>
 #include <ext/pb_ds/assoc_container.hpp>
@@ -271,3 +274,5 @@ namespace tree_generator_by_ouuan
         }
     };
 }
+
+#endif
