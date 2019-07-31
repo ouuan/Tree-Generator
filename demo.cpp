@@ -3,9 +3,9 @@
 using namespace std;
 using namespace tree_generator_by_ouuan;
 
-void myOutputEdge(ostream& os, int u, int fa)
+void myOutputEdge(ostream& os, int u, int pa)
 {
-    os << u + 1 << ' ' << fa + 1 << ' ' << randint(1, 10) << endl;
+    os << u + 1 << ' ' << pa + 1 << ' ' << randint(1, 10) << endl;
 }
 
 int main()

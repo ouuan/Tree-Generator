@@ -44,24 +44,31 @@ namespace tree_generator_by_ouuan
 
     int (*randint)(int, int) = defaultRandInt;
 
-    void defaultOutputEdge(ostream& os, int u, int fa)
+    void defaultOutputEdge(ostream& os, int u, int pa)
     {
-        if (randint(0, 1) == 0) os << u + 1 << ' ' << fa + 1 << endl;
-        else os << fa + 1 << ' ' << u + 1 << endl;
+        if (randint(0, 1) == 0) os << u + 1 << ' ' << pa + 1 << endl;
+        else os << pa + 1 << ' ' << u + 1 << endl;
     }
 
     void (*outputEdge)(ostream&, int, int) = defaultOutputEdge;
 
     class Tree
     {
-        private:
+    private:
         vector<int> p, id, eid;
 
-        public:
+    public:
         Tree()
         {
             p.push_back(-1);
             id.push_back(0);
+        }
+        Tree(int n)
+        {
+            assert(n > 0);
+            p.push_back(-1);
+            id.push_back(0);
+            random(n - 1, 0);
         }
         Tree(const string& s)
         {
@@ -137,56 +144,56 @@ namespace tree_generator_by_ouuan
             }
         }
         int size() const { return id.size(); }
-        void addNode(int fa)
+        void addNode(int pa)
         {
             id.push_back(id.size());
-            p.push_back(fa);
+            p.push_back(pa);
             eid.push_back(id.size() - 1);
         }
-        void random(int n, int fa)
+        void random(int n, int pa)
         {
             int sz = size();
             assert(n > 0);
-            assert(fa >= 0);
-            assert(fa < sz);
-            addNode(fa);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
             for (int i = sz + 1; i < sz + n; ++i) addNode(randint(sz, i - 1));
         }
-        void tall(int n, int k, int fa)
+        void tall(int n, int k, int pa)
         {
             int sz = size();
             assert(n > 0);
             assert(k > 0);
-            assert(fa >= 0);
-            assert(fa < sz);
-            addNode(fa);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
             for (int i = sz + 1; i < sz + n; ++i) addNode(randint(max(sz, i - k), i - 1));
         }
-        void chain(int n, int fa)
+        void chain(int n, int pa)
         {
-            tall(n, 1, fa);
+            tall(n, 1, pa);
         }
-        void star(int n, int fa)
+        void star(int n, int pa)
         {
             int sz = size();
             assert(n > 0);
-            assert(fa >= 0);
-            assert(fa < sz);
-            addNode(fa);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
             for (int i = sz + 1; i < sz + n; ++i) addNode(sz);
         }
-        void flower(int n, int fa)
+        void flower(int n, int pa)
         {
-            star(n, fa);
+            star(n, pa);
         }
-        void maxDegree(int n, int k, int fa)
+        void maxDegree(int n, int k, int pa)
         {
             int sz = size();
             assert(n > 0);
             assert(k >= 2);
-            assert(fa >= 0);
-            assert(fa < sz);
-            addNode(fa);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
             __gnu_pbds::tree<pii, __gnu_pbds::null_type, less<pii>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> remain;
             remain.insert(pii(sz, k - 1));
             for (int i = sz + 1; i < sz + n; ++i)
@@ -200,32 +207,32 @@ namespace tree_generator_by_ouuan
                 remain.insert(pii(i, k - 1));
             }
         }
-        void complete(int n, int k, int fa)
+        void complete(int n, int k, int pa)
         {
             int sz = size();
             assert(n > 0);
             assert(k >= 2);
-            assert(fa >= 0);
-            assert(fa < sz);
-            addNode(fa);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
             for (int i = sz + 1; i < sz + n; ++i) addNode(sz + ceil(1.0 * (i - sz) / (k - 1) - 1e-9) - 1);
         }
-        void binary(int n, int fa)
+        void binary(int n, int pa)
         {
-            maxDegree(n, 3, fa);
+            maxDegree(n, 3, pa);
         }
-        void completeBinary(int n, int fa)
+        void completeBinary(int n, int pa)
         {
-            complete(n, 3, fa);
+            complete(n, 3, pa);
         }
-        void silkworm(int n, int fa)
+        void silkworm(int n, int pa)
         {
             int sz = size();
             assert(n > 0);
-            assert(fa >= 0);
-            assert(fa < sz);
+            assert(pa >= 0);
+            assert(pa < sz);
             int chain_len = (n + 1) / 2;
-            chain(chain_len, fa);
+            chain(chain_len, pa);
             for (int i = sz; i + chain_len < sz + n; ++i) addNode(i);
         }
         void addLeaves(int n, int l, int r)

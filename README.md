@@ -3,7 +3,7 @@ Help problem setters to generate a variety of trees.
 
 You can generate different trees with few functions or even a string, and customize the output function or the random function.
 
-It's **not** well-tested yet, so bug reports are welcomed.
+It **hasn't** been well-tested yet, so bug reports are welcomed.
 
 ### How to use?
 
@@ -17,9 +17,9 @@ Please read the [GUIDEBOOK](/GUIDEBOOK.md).
 using namespace std;
 using namespace tree_generator_by_ouuan;
 
-void myOutputEdge(ostream& os, int u, int fa)
+void myOutputEdge(ostream& os, int u, int pa)
 {
-    os << u + 1 << ' ' << fa + 1 << ' ' << randint(1, 10) << endl;
+    os << u + 1 << ' ' << pa + 1 << ' ' << randint(1, 10) << endl;
 }
 
 int main()
@@ -39,10 +39,10 @@ int main()
 }
 ```
 
-![](demo1.png)
+![](image/demo1.png)
 
-![](demo2.png)
+![](image/demo2.png)
 
-![](demo3.png)
+![](image/demo3.png)
 
 (visualization by [CS Academy](https://csacademy.com/app/graph_editor/))
