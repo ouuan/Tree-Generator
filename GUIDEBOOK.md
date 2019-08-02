@@ -34,6 +34,8 @@ In the following functions, the nodes are added in some BFS order (so are the nu
 
 `void random(int n, int pa)`: add a random tree consisting of n nodes whose root's parent is `pa`.
 
+`void random(int n, int low, int high, int pa)`: add a random tree consisting of n nodes whose parent is `pa`, the parent of the i-th node is chosen from the interval [i\*low/100, i\*high/100].
+
 ![random(20,0)](image/random.png)
 
 `void tall(int n, int k, int pa)`: add a tree consisting of n nodes whose root's parent is `pa`, in which the parent of the node i is random but has no more than k choice. Specifically, only the last k nodes created before i can be the parent of i, except the first k nodes.
@@ -86,6 +88,8 @@ Example:  `Tree("bi30,0sw20,30fl10,50ch20,0al5,61,80")`
 
 `void random(int n, int pa)`: `rd<n>,<pa>`
 
+`void random(int n, int low, int high, int pa)`: `rd<n>,<low>,<high>,<pa>`
+
 `void tall(int n, int k, int pa)`: `tl<n>,<k>,<pa>`
 
 `void chain(int n, int pa)`: `ch<n>,<pa>`
@@ -129,4 +133,3 @@ int myRandInt(int l, int r)
 
 randint = myRandInt;
 ```
-

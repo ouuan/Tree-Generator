@@ -57,10 +57,10 @@ namespace tree_generator_by_ouuan
 
     class Tree
     {
-    private:
+        private:
         vector<int> p, id, eid;
 
-    public:
+        public:
         Tree()
         {
             p.push_back(-1);
@@ -80,7 +80,8 @@ namespace tree_generator_by_ouuan
 
             function<unsigned int(const string&, unsigned int)> findComma = [](const string& str, unsigned int sta)
             {
-                return str.find(',', sta);
+                while (sta < str.size() && str[sta] != ',') ++sta;
+                return sta;
             };
 
             function<unsigned int(const string&, unsigned int)> findLetter = [](const string& str, unsigned int sta)
@@ -89,66 +90,105 @@ namespace tree_generator_by_ouuan
                 return sta;
             };
 
+            function<void(const string &)> error = [](const string & func)
+            {
+                cerr << "Error: the number of parameters for " << func << " is not correct." << endl;
+            };
+
             unsigned int pos = 0;
 
             while (pos < s.size())
             {
                 if (pos + 1 >= s.size())
                 {
-                    cerr << "Error: can't recognize tree type abbreviation, it's too short.\n";
+                    cerr << "Error: can't recognize the tree type abbreviation, it's too short.\n";
                     return;
                 }
                 string type = s.substr(pos, 2);
                 pos += 2;
                 for_each(type.begin(), type.end(), [](char& x){x = tolower(x);});
+                int nextLetter = findLetter(s, pos);
+                vector<int> par;
+                while (1)
+                {
+                    int nextComma = findComma(s, pos);
+                    par.push_back(atoi(s.substr(pos, nextComma - pos).c_str()));
+                    pos = nextComma + 1;
+                    if (nextComma >= nextLetter)
+                    {
+                        pos = nextLetter;
+                        break;
+                    }
+                }
                 if (type == "nd")
                 {
-                    int nxt = findLetter(s, pos);
-                    int x = atoi(s.substr(pos, nxt - pos).c_str());
-                    pos = nxt;
-                    addNode(x);
+                    if (par.size() == 1) addNode(par[0]);
+                    else error("addNode");
                 }
-                else if (type == "rd" || type == "ch" || type == "st" || type == "fl"
-                         || type == "bi" || type == "cb" || type == "sw")
+                else if (type == "rd")
                 {
-                    int nxt = findComma(s, pos);
-                    int x = atoi(s.substr(pos, nxt - pos).c_str());
-                    pos = nxt + 1;
-                    nxt = findLetter(s, pos);
-                    int y = atoi(s.substr(pos, nxt - pos).c_str());
-                    pos = nxt;
-                    if (type == "rd") random(x, y);
-                    else if (type == "ch") chain(x, y);
-                    else if (type == "st") star(x, y);
-                    else if (type == "fl") flower(x, y);
-                    else if (type == "bi") binary(x, y);
-                    else if (type == "cb") completeBinary(x, y);
-                    else if (type == "sw") silkworm(x, y);
-                    else assert(false);
+                    if (par.size() == 2) random(par[0], par[1]);
+                    else if (par.size() == 4) random(par[0], par[1], par[2], par[3]);
+                    else error("random");
                 }
-                else if (type == "tl" || type == "md" || type == "cp" || type == "al")
+                else if (type == "tl")
                 {
-                    int nxt = findComma(s, pos);
-                    int x = atoi(s.substr(pos, nxt - pos).c_str());
-                    pos = nxt + 1;
-                    nxt = findComma(s, pos);
-                    int y = atoi(s.substr(pos, nxt - pos).c_str());
-                    pos = nxt + 1;
-                    nxt = findLetter(s, pos);
-                    int z = atoi(s.substr(pos, nxt - pos).c_str());
-                    pos = nxt;
-                    if (type == "tl") tall(x, y, z);
-                    else if (type == "md") maxDegree(x, y, z);
-                    else if (type == "cp") complete(x, y, z);
-                    else if (type == "al") addLeaves(x, y, z);
-                    else assert(false);
+                    if (par.size() == 3) tall(par[0], par[1], par[2]);
+                    else error("tall");
                 }
-                else cerr << "Error: can't recognize tree type abbreviation " << type << ".\n";
+                else if (type == "ch")
+                {
+                    if (par.size() == 2) chain(par[0], par[1]);
+                    else error("chain");
+                }
+                else if (type == "st")
+                {
+                    if (par.size() == 2) star(par[0], par[1]);
+                    else error("star");
+                }
+                else if (type == "fl")
+                {
+                    if (par.size() == 2) flower(par[0], par[1]);
+                    else error("flower");
+                }
+                else if (type == "md")
+                {
+                    if (par.size() == 3) maxDegree(par[0], par[1], par[2]);
+                    else error("maxDegree");
+                }
+                else if (type == "cp")
+                {
+                    if (par.size() == 3) complete(par[0], par[1], par[2]);
+                    else error("complete");
+                }
+                else if (type == "bi")
+                {
+                    if (par.size() == 2) binary(par[0], par[1]);
+                    else error("binary");
+                }
+                else if (type == "cb")
+                {
+                    if (par.size() == 2) completeBinary(par[0], par[1]);
+                    else error("completeBinary");
+                }
+                else if (type == "sw")
+                {
+                    if (par.size() == 2) silkworm(par[0], par[1]);
+                    else error("silkworm");
+                }
+                else if (type == "al")
+                {
+                    if (par.size() == 3) addLeaves(par[0], par[1], par[2]);
+                    else error("addLeaves");
+                }
+                else cerr << "Error: can't recognize the tree type abbreviation " << type << ".\n";
             }
         }
         int size() const { return id.size(); }
         void addNode(int pa)
         {
+            assert(pa >= 0);
+            assert(pa < size());
             id.push_back(id.size());
             p.push_back(pa);
             eid.push_back(id.size() - 1);
@@ -160,7 +200,65 @@ namespace tree_generator_by_ouuan
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
-            for (int i = sz + 1; i < sz + n; ++i) addNode(randint(sz, i - 1));
+            vector<int> prufer, cnt;
+            vector<vector<int> > g;
+            g.resize(n);
+            cnt.resize(n, 0);
+            for (int i = 0; i < n - 2; ++i)
+            {
+                int x = randint(0, n - 1);
+                prufer.push_back(x);
+                ++cnt[x];
+            }
+            priority_queue<int> q;
+            for (int i = 0; i < n; ++i) if (!cnt[i]) q.push(i);
+            for (auto v : prufer)
+            {
+                int u = q.top();
+                g[u].push_back(v);
+                g[v].push_back(u);
+                q.pop();
+                if (--cnt[v] == 0) q.push(v);
+            }
+            int x = q.top();
+            q.pop();
+            int y = q.top();
+            g[x].push_back(y);
+            g[y].push_back(x);
+
+            queue<int> bfs;
+
+            bfs.push(0);
+            int _id = sz;
+            addNode(pa);
+
+            while (!bfs.empty())
+            {
+                int u = bfs.front();
+                cnt[u] = 1;
+                bfs.pop();
+                for (auto v : g[u])
+                {
+                    if (cnt[v] == 0)
+                    {
+                        addNode(_id);
+                        bfs.push(v);
+                    }
+                }
+                ++_id;
+            }
+        }
+        void random(int n, int low, int high, int pa)
+        {
+            int sz = size();
+            assert(n > 0);
+            assert(low >= 0);
+            assert(high < 100);
+            assert(high >= low);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
+            for (int i = 1; i < n; ++i) addNode(randint(i * low / 100, i * high / 100) + sz);
         }
         void tall(int n, int k, int pa)
         {
@@ -174,6 +272,9 @@ namespace tree_generator_by_ouuan
         }
         void chain(int n, int pa)
         {
+            assert(n > 0);
+            assert(pa >= 0);
+            assert(pa < size());
             tall(n, 1, pa);
         }
         void star(int n, int pa)
@@ -187,6 +288,9 @@ namespace tree_generator_by_ouuan
         }
         void flower(int n, int pa)
         {
+            assert(n > 0);
+            assert(pa >= 0);
+            assert(pa < size());
             star(n, pa);
         }
         void maxDegree(int n, int k, int pa)
@@ -222,10 +326,16 @@ namespace tree_generator_by_ouuan
         }
         void binary(int n, int pa)
         {
+            assert(n > 0);
+            assert(pa >= 0);
+            assert(pa < size());
             maxDegree(n, 3, pa);
         }
         void completeBinary(int n, int pa)
         {
+            assert(n > 0);
+            assert(pa >= 0);
+            assert(pa < size());
             complete(n, 3, pa);
         }
         void silkworm(int n, int pa)
