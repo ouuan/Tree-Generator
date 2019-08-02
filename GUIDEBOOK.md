@@ -133,3 +133,11 @@ int myRandInt(int l, int r)
 
 randint = myRandInt;
 ```
+
+## Other functions
+
+`int size()`: return the number of nodes.
+
+`void resize(int n)`: add leaves if n > size, cut the last size - n nodes and reorder the nodes and edges if n < size.
+
+`void printEdge(int edgeID, ostream& os = cout)`: print an edge.

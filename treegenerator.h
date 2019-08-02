@@ -373,6 +373,19 @@ namespace tree_generator_by_ouuan
                 swap(eid[i], eid[randint(0, i)]);
             }
         }
+        void resize(int n)
+        {
+        	assert(n > 0);
+            if (size() < n) addLeaves(n - size(), 0, size() - 1);
+            else if (size() > n)
+            {
+                p.resize(n);
+                id.resize(n);
+                eid.resize(n - 1);
+                for (int i = 0; i < n; ++i) id[i] = i;
+                for (int i = 0; i < n - 1; ++i) eid[i] = i + 1;
+            }
+        }
         void printEdge(int edgeID, ostream& os = cout) const
         {
             outputEdge(os, id[eid[edgeID]], id[p[eid[edgeID]]]);
