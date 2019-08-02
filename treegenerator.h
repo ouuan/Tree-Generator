@@ -375,7 +375,7 @@ namespace tree_generator_by_ouuan
         }
         void resize(int n)
         {
-        	assert(n > 0);
+            assert(n > 0);
             if (size() < n) addLeaves(n - size(), 0, size() - 1);
             else if (size() > n)
             {
