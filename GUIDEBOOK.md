@@ -34,9 +34,11 @@ In the following functions, the nodes are added in some BFS order (so are the nu
 
 `void random(int n, int pa)`: add a random tree consisting of n nodes whose root's parent is `pa`.
 
-`void random(int n, int low, int high, int pa)`: add a random tree consisting of n nodes whose parent is `pa`, the parent of the i-th node is chosen from the interval [i\*low/100, i\*high/100].
-
 ![random(20,0)](image/random.png)
+
+`void lowhigh(int n, double low, double high, int pa)`: add a random tree consisting of n nodes whose parent is `pa`, the parent of the i-th node is chosen from the interval [i\*low, i\*high].
+
+![lowhigh(30,0.1,0.3,0)](image/lowhigh.png)
 
 `void tall(int n, int k, int pa)`: add a tree consisting of n nodes whose root's parent is `pa`, in which the parent of the node i is random but has no more than k choice. Specifically, only the last k nodes created before i can be the parent of i, except the first k nodes.
 

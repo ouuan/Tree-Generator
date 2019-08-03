@@ -93,6 +93,7 @@ namespace tree_generator_by_ouuan
             function<void(const string &)> error = [](const string & func)
             {
                 cerr << "Error: the number of parameters for " << func << " is not correct." << endl;
+                exit(1);
             };
 
             unsigned int pos = 0;
@@ -102,12 +103,34 @@ namespace tree_generator_by_ouuan
                 if (pos + 1 >= s.size())
                 {
                     cerr << "Error: can't recognize the tree type abbreviation, it's too short.\n";
-                    return;
+                    exit(1);
                 }
                 string type = s.substr(pos, 2);
                 pos += 2;
                 for_each(type.begin(), type.end(), [](char& x){x = tolower(x);});
                 int nextLetter = findLetter(s, pos);
+                if (type == "lh")
+                {
+                    int nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    int n = atoi(s.substr(pos, nextComma - pos).c_str());
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    double low, high;
+                    sscanf(s.substr(pos, nextComma - pos).c_str(), "%lf", &low);
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    sscanf(s.substr(pos, nextComma - pos).c_str(), "%lf", &high);
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma >= nextLetter);
+                    int pa = atoi(s.substr(pos, nextComma - pos).c_str());
+                    pos = nextLetter;
+                    lowhigh(n, low, high, pa);
+                    continue;
+                }
                 vector<int> par;
                 while (1)
                 {
@@ -128,7 +151,6 @@ namespace tree_generator_by_ouuan
                 else if (type == "rd")
                 {
                     if (par.size() == 2) random(par[0], par[1]);
-                    else if (par.size() == 4) random(par[0], par[1], par[2], par[3]);
                     else error("random");
                 }
                 else if (type == "tl")
@@ -181,7 +203,11 @@ namespace tree_generator_by_ouuan
                     if (par.size() == 3) addLeaves(par[0], par[1], par[2]);
                     else error("addLeaves");
                 }
-                else cerr << "Error: can't recognize the tree type abbreviation " << type << ".\n";
+                else
+                {
+                    cerr << "Error: can't recognize the tree type abbreviation " << type << "." << endl;
+                    exit(1);
+                }
             }
         }
         int size() const { return id.size(); }
@@ -248,17 +274,17 @@ namespace tree_generator_by_ouuan
                 ++_id;
             }
         }
-        void random(int n, int low, int high, int pa)
+        void lowhigh(int n, double low, double high, int pa)
         {
             int sz = size();
             assert(n > 0);
             assert(low >= 0);
-            assert(high < 100);
+            assert(high < 1);
             assert(high >= low);
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
-            for (int i = 1; i < n; ++i) addNode(randint(i * low / 100, i * high / 100) + sz);
+            for (int i = 1; i < n; ++i) addNode(randint(max(0, int(i * low)), min(int(i * high), i - 1)) + sz);
         }
         void tall(int n, int k, int pa)
         {
