@@ -279,12 +279,12 @@ namespace tree_generator_by_ouuan
             int sz = size();
             assert(n > 0);
             assert(low >= 0);
-            assert(high < 1);
+            assert(high <= 1);
             assert(high >= low);
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
-            for (int i = 1; i < n; ++i) addNode(randint(max(0, int(i * low)), min(int(i * high), i - 1)) + sz);
+            for (int i = 1; i < n; ++i) addNode(randint(round((i - 1) * low), round((i - 1) * high)) + sz);
         }
         void tall(int n, int k, int pa)
         {

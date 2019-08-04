@@ -36,7 +36,7 @@ In the following functions, the nodes are added in some BFS order (so are the nu
 
 ![random(20,0)](image/random.png)
 
-`void lowhigh(int n, double low, double high, int pa)`: add a random tree consisting of n nodes whose parent is `pa`, the parent of the i-th node is chosen from the interval [i\*low, i\*high].
+`void lowhigh(int n, double low, double high, int pa)`: add a random tree consisting of n nodes whose parent is `pa`, the parent of the i-th node is chosen from the interval [(i-1)\*low, (i-1)\*high].
 
 ![lowhigh(30,0.1,0.3,0)](image/lowhigh.png)
 
