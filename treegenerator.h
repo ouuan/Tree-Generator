@@ -416,6 +416,10 @@ namespace tree_generator_by_ouuan
         {
             outputEdge(os, id[eid[edgeID]], id[p[eid[edgeID]]]);
         }
+        int parent(int u) const
+        {
+        	return p[u];
+		}
         friend ostream& operator<<(ostream& os, const Tree& t)
         {
             for (unsigned int i = 0; i < t.eid.size(); ++i) t.printEdge(i, os);
