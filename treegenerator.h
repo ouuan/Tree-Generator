@@ -131,6 +131,32 @@ namespace tree_generator_by_ouuan
                     lowhigh(n, low, high, pa);
                     continue;
                 }
+                if (type == "lm")
+                {
+                    int nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    int n = atoi(s.substr(pos, nextComma - pos).c_str());
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    int k = atoi(s.substr(pos, nextComma - pos).c_str());
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    double low, high;
+                    sscanf(s.substr(pos, nextComma - pos).c_str(), "%lf", &low);
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma < nextLetter);
+                    sscanf(s.substr(pos, nextComma - pos).c_str(), "%lf", &high);
+                    pos = nextComma + 1;
+                    nextComma = findComma(s, pos);
+                    assert(nextComma >= nextLetter);
+                    int pa = atoi(s.substr(pos, nextComma - pos).c_str());
+                    pos = nextLetter;
+                    lowhighMaxDegree(n, k, low, high, pa);
+                    continue;
+                }
                 vector<int> par;
                 while (1)
                 {
@@ -332,6 +358,29 @@ namespace tree_generator_by_ouuan
             for (int i = sz + 1; i < sz + n; ++i)
             {
                 auto it = remain.find_by_order(randint(0, remain.size() - 1));
+                int u = it->first;
+                int t = it->second;
+                remain.erase(it);
+                if (t > 1) remain.insert(pii(u, t - 1));
+                addNode(u);
+                remain.insert(pii(i, k - 1));
+            }
+        }
+        void lowhighMaxDegree(int n, int k, double low, double high, int pa)
+        {
+            int sz = size();
+            assert(n > 0);
+            assert(k >= 2);
+            assert(low >= 0);
+            assert(high <= 1);
+            assert(pa >= 0);
+            assert(pa < sz);
+            addNode(pa);
+            __gnu_pbds::tree<pii, __gnu_pbds::null_type, less<pii>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> remain;
+            remain.insert(pii(sz, k - 1));
+            for (int i = sz + 1; i < sz + n; ++i)
+            {
+                auto it = remain.find_by_order(randint(round((remain.size() - 1) * low), round((remain.size() - 1) * high)));
                 int u = it->first;
                 int t = it->second;
                 remain.erase(it);

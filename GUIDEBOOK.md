@@ -56,6 +56,8 @@ In the following functions, the nodes are added in some BFS order (so are the nu
 
 `void maxDegree(int n, int k, int pa)`: add a random tree consisting of n nodes whose root's parent is `pa`, and all nodes' degrees don't exceed k.
 
+`void lowhighMaxDegree(int n, int k, double low, double high, int pa)`: lowhigh + maxDegree.
+
 ![maxDegree(20,4,0)](image/maxdegree.png)
 
 `void complete(int n, int k, int pa)`: add a complete tree (like complete binary tree) consisting of n nodes whose root's parent of `pa`, and all nodes' degrees don't exceed k.
@@ -101,6 +103,8 @@ Example:  `Tree("bi30,0sw20,30fl10,50ch20,0al5,61,80")`
 `void flower(int n, int pa)`: `fl<n>,<pa>`
 
 `void maxDegree(int n, int k, int pa)`: `md<n>,<k>,<pa>`
+
+`void lowhighMaxDegree(int n, int k, double low, double high, int pa)`: `lm<n>,<k>,<low>,<high>,<pa>`
 
 `void complete(int n, int k, int pa)`: `cp<n>,<k>,<pa>`
 
