@@ -418,8 +418,8 @@ namespace tree_generator_by_ouuan
         }
         int parent(int u) const
         {
-        	return p[u];
-		}
+            return p[u];
+        }
         friend ostream& operator<<(ostream& os, const Tree& t)
         {
             for (unsigned int i = 0; i < t.eid.size(); ++i) t.printEdge(i, os);
