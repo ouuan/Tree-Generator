@@ -71,7 +71,7 @@ namespace tree_generator_by_ouuan
             assert(n > 0);
             p.push_back(-1);
             id.push_back(0);
-            random(n - 1, 0);
+            if (n > 1) random(n - 1, 0);
         }
         Tree(const string& s)
         {
@@ -252,6 +252,12 @@ namespace tree_generator_by_ouuan
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
+            if (n == 1) return;
+            if (n == 2)
+            {
+                addNode(sz);
+                return;
+            }
             vector<int> prufer, cnt;
             vector<vector<int> > g;
             g.resize(n);
@@ -282,7 +288,6 @@ namespace tree_generator_by_ouuan
 
             bfs.push(0);
             int _id = sz;
-            addNode(pa);
 
             while (!bfs.empty())
             {
