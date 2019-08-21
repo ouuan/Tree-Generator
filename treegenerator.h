@@ -24,6 +24,8 @@ SOFTWARE.
 
 */
 
+// See https://github.com/ouuan/Tree-Generator to get latest version or bug tracker.
+
 #ifndef TREE_GENERATOR_BY_OUUAN_
 #define TREE_GENERATOR_BY_OUUAN_ 1
 
