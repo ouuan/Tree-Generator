@@ -65,10 +65,10 @@ namespace tree_generator_by_ouuan
 
     class Tree
     {
-        private:
+    private:
         std::vector<int> p, id, eid;
 
-        public:
+    public:
         Tree()
         {
             p.push_back(-1);
