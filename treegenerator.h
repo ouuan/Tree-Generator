@@ -29,17 +29,23 @@ SOFTWARE.
 #ifndef TREE_GENERATOR_BY_OUUAN_
 #define TREE_GENERATOR_BY_OUUAN_ 1
 
-#include <bits/stdc++.h>
+#include <queue>
+#include <chrono>
+#include <random>
+#include <vector>
+#include <string>
+#include <cassert>
+#include <cstdlib>
+#include <iostream>
+#include <algorithm>
 #include <ext/pb_ds/tree_policy.hpp>
 #include <ext/pb_ds/assoc_container.hpp>
 
 namespace tree_generator_by_ouuan
 {
-    using namespace std;
+    typedef std::pair<int, int> pii; 
 
-    typedef pair<int, int> pii; 
-
-    mt19937 defaultRNG(chrono::steady_clock::now().time_since_epoch().count());
+    std::mt19937 defaultRNG(std::chrono::steady_clock::now().time_since_epoch().count());
 
     int defaultRandInt(int l, int r)
     {
@@ -49,20 +55,20 @@ namespace tree_generator_by_ouuan
 
     int (*randint)(int, int) = defaultRandInt;
 
-    void defaultOutputEdge(ostream& os, int u, int pa)
+    void defaultOutputEdge(std::ostream& os, int u, int pa)
     {
-        if (randint(0, 1) == 0) os << u + 1 << ' ' << pa + 1 << endl;
-        else os << pa + 1 << ' ' << u + 1 << endl;
+        if (randint(0, 1) == 0) os << u + 1 << ' ' << pa + 1 << std::endl;
+        else os << pa + 1 << ' ' << u + 1 << std::endl;
     }
 
-    void (*outputEdge)(ostream&, int, int) = defaultOutputEdge;
+    void (*outputEdge)(std::ostream&, int, int) = defaultOutputEdge;
 
     class Tree
     {
-    private:
-        vector<int> p, id, eid;
+        private:
+        std::vector<int> p, id, eid;
 
-    public:
+        public:
         Tree()
         {
             p.push_back(-1);
@@ -75,26 +81,26 @@ namespace tree_generator_by_ouuan
             id.push_back(0);
             if (n > 1) random(n - 1, 0);
         }
-        Tree(const string& s)
+        Tree(const std::string& s)
         {
             p.push_back(-1);
             id.push_back(0);
 
-            function<unsigned int(const string&, unsigned int)> findComma = [](const string& str, unsigned int sta)
+            std::function<unsigned int(const std::string&, unsigned int)> findComma = [](const std::string& str, unsigned int sta)
             {
                 while (sta < str.size() && str[sta] != ',') ++sta;
                 return sta;
             };
 
-            function<unsigned int(const string&, unsigned int)> findLetter = [](const string& str, unsigned int sta)
+            std::function<unsigned int(const std::string&, unsigned int)> findLetter = [](const std::string& str, unsigned int sta)
             {
                 while (sta < str.size() && !isalpha(str[sta])) ++sta;
                 return sta;
             };
 
-            function<void(const string &)> error = [](const string & func)
+            std::function<void(const std::string &)> error = [](const std::string & func)
             {
-                cerr << "Error: the number of parameters for " << func << " is not correct." << endl;
+                std::cerr << "Error: the number of parameters for " << func << " is not correct." << std::endl;
                 exit(1);
             };
 
@@ -104,10 +110,10 @@ namespace tree_generator_by_ouuan
             {
                 if (pos + 1 >= s.size())
                 {
-                    cerr << "Error: can't recognize the tree type abbreviation, it's too short.\n";
+                    std::cerr << "Error: can't recognize the tree type abbreviation, it's too short.\n";
                     exit(1);
                 }
-                string type = s.substr(pos, 2);
+                std::string type = s.substr(pos, 2);
                 pos += 2;
                 for_each(type.begin(), type.end(), [](char& x){x = tolower(x);});
                 int nextLetter = findLetter(s, pos);
@@ -159,7 +165,7 @@ namespace tree_generator_by_ouuan
                     lowhighMaxDegree(n, k, low, high, pa);
                     continue;
                 }
-                vector<int> par;
+                std::vector<int> par;
                 while (1)
                 {
                     int nextComma = findComma(s, pos);
@@ -233,7 +239,7 @@ namespace tree_generator_by_ouuan
                 }
                 else
                 {
-                    cerr << "Error: can't recognize the tree type abbreviation " << type << "." << endl;
+                    std::cerr << "Error: can't recognize the tree type abbreviation " << type << "." << std::endl;
                     exit(1);
                 }
             }
@@ -260,8 +266,8 @@ namespace tree_generator_by_ouuan
                 addNode(sz);
                 return;
             }
-            vector<int> prufer, cnt;
-            vector<vector<int> > g;
+            std::vector<int> prufer, cnt;
+            std::vector<std::vector<int> > g;
             g.resize(n);
             cnt.resize(n, 0);
             for (int i = 0; i < n - 2; ++i)
@@ -270,7 +276,7 @@ namespace tree_generator_by_ouuan
                 prufer.push_back(x);
                 ++cnt[x];
             }
-            priority_queue<int> q;
+            std::priority_queue<int> q;
             for (int i = 0; i < n; ++i) if (!cnt[i]) q.push(i);
             for (auto v : prufer)
             {
@@ -286,7 +292,7 @@ namespace tree_generator_by_ouuan
             g[x].push_back(y);
             g[y].push_back(x);
 
-            queue<int> bfs;
+            std::queue<int> bfs;
 
             bfs.push(0);
             int _id = sz;
@@ -327,7 +333,7 @@ namespace tree_generator_by_ouuan
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
-            for (int i = sz + 1; i < sz + n; ++i) addNode(randint(max(sz, i - k), i - 1));
+            for (int i = sz + 1; i < sz + n; ++i) addNode(randint(std::max(sz, i - k), i - 1));
         }
         void chain(int n, int pa)
         {
@@ -360,7 +366,7 @@ namespace tree_generator_by_ouuan
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
-            __gnu_pbds::tree<pii, __gnu_pbds::null_type, less<pii>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> remain;
+            __gnu_pbds::tree<pii, __gnu_pbds::null_type, std::less<pii>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> remain;
             remain.insert(pii(sz, k - 1));
             for (int i = sz + 1; i < sz + n; ++i)
             {
@@ -383,7 +389,7 @@ namespace tree_generator_by_ouuan
             assert(pa >= 0);
             assert(pa < sz);
             addNode(pa);
-            __gnu_pbds::tree<pii, __gnu_pbds::null_type, less<pii>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> remain;
+            __gnu_pbds::tree<pii, __gnu_pbds::null_type, std::less<pii>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> remain;
             remain.insert(pii(sz, k - 1));
             for (int i = sz + 1; i < sz + n; ++i)
             {
@@ -444,7 +450,7 @@ namespace tree_generator_by_ouuan
             for (unsigned int i = from; i < id.size(); ++i)
             {
                 id[i] = i;
-                swap(id[i], id[randint(from, i)]);
+                std::swap(id[i], id[randint(from, i)]);
             }
         }
         void shuffleEdges()
@@ -452,7 +458,7 @@ namespace tree_generator_by_ouuan
             for (unsigned int i = 0; i < eid.size(); ++i)
             {
                 eid[i] = i + 1;
-                swap(eid[i], eid[randint(0, i)]);
+                std::swap(eid[i], eid[randint(0, i)]);
             }
         }
         void resize(int n)
@@ -468,7 +474,7 @@ namespace tree_generator_by_ouuan
                 for (int i = 0; i < n - 1; ++i) eid[i] = i + 1;
             }
         }
-        void printEdge(int edgeID, ostream& os = cout) const
+        void printEdge(int edgeID, std::ostream& os = std::cout) const
         {
             outputEdge(os, id[eid[edgeID]], id[p[eid[edgeID]]]);
         }
@@ -476,7 +482,7 @@ namespace tree_generator_by_ouuan
         {
             return p[u];
         }
-        friend ostream& operator<<(ostream& os, const Tree& t)
+        friend std::ostream& operator<<(std::ostream& os, const Tree& t)
         {
             for (unsigned int i = 0; i < t.eid.size(); ++i) t.printEdge(i, os);
             return os;
