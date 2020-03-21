@@ -1,0 +1,30 @@
+name: "CI Test"
+
+on:
+  push:
+    paths-ignore:
+    - '*.md'
+  pull_request:
+    paths-ignore:
+    - '*.md'
+
+jobs:
+  build:
+    name: "CI Test on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: "Run tests"
+      shell: bash
+      run: |
+        cd tests
+        g++ -std=c++11 -I .. -o test test.cpp
+        g++ -std=c++11 -o check check.cpp
+        ./test > test.out
+        ./check < test.out
