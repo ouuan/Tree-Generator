@@ -92,7 +92,7 @@ Example:  `Tree("bi30,0sw20,30fl10,50ch20,0al5,61,80")`
 
 `void random(int n, int pa)`: `rd<n>,<pa>`
 
-`void random(int n, int low, int high, int pa)`: `rd<n>,<low>,<high>,<pa>`
+`void lowhigh(int n, int low, int high, int pa)`: `lh<n>,<low>,<high>,<pa>`
 
 `void tall(int n, int k, int pa)`: `tl<n>,<k>,<pa>`
 
